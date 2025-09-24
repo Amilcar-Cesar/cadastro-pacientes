@@ -8,35 +8,52 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
+    /* Medical clinic blue gradient palette */
+    --clinic-blue-deep: 225 68% 50%;     /* #2858D8 */
+    --clinic-blue-medium: 221 76% 71%;   /* #476FE2 */
+    --clinic-blue-light: 218 77% 73%;    /* #6786EC */
+    --clinic-blue-lighter: 214 84% 76%;  /* #869DF5 */
+    --clinic-blue-lightest: 211 100% 82%; /* #A5B4FF */
+    
+    /* Design system tokens */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 225 68% 20%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 225 68% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 225 68% 20%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 225 68% 50%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 211 100% 95%;
+    --secondary-foreground: 225 68% 20%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 211 100% 95%;
+    --muted-foreground: 225 30% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 218 77% 73%;
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 211 50% 90%;
+    --input: 211 50% 90%;
+    --ring: 225 68% 50%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+    
+    /* Custom gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--clinic-blue-deep)), hsl(var(--clinic-blue-medium)));
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--clinic-blue-light)), hsl(var(--clinic-blue-lighter)));
+    --gradient-background: linear-gradient(180deg, hsl(var(--clinic-blue-lightest) / 0.1), hsl(var(--clinic-blue-light) / 0.05));
+    
+    /* Shadows */
+    --shadow-primary: 0 4px 20px hsl(var(--clinic-blue-deep) / 0.15);
+    --shadow-card: 0 2px 10px hsl(var(--clinic-blue-deep) / 0.08);
 
     --sidebar-background: 0 0% 98%;
 
@@ -56,33 +73,33 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 225 68% 8%;
+    --foreground: 211 100% 95%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 225 68% 10%;
+    --card-foreground: 211 100% 95%;
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 225 68% 10%;
+    --popover-foreground: 211 100% 95%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 218 77% 73%;
+    --primary-foreground: 225 68% 8%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 225 68% 15%;
+    --secondary-foreground: 211 100% 95%;
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 225 68% 15%;
+    --muted-foreground: 211 30% 65%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 214 84% 76%;
+    --accent-foreground: 225 68% 8%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 225 68% 15%;
+    --input: 225 68% 15%;
+    --ring: 218 77% 73%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;

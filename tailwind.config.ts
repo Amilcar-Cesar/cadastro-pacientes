@@ -14,6 +14,13 @@ export default {
     },
     extend: {
       colors: {
+        'clinic-blue': {
+          'deep': 'hsl(var(--clinic-blue-deep))',
+          'medium': 'hsl(var(--clinic-blue-medium))',
+          'light': 'hsl(var(--clinic-blue-light))',
+          'lighter': 'hsl(var(--clinic-blue-lighter))',
+          'lightest': 'hsl(var(--clinic-blue-lightest))',
+        },
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
@@ -81,9 +88,20 @@ export default {
           },
         },
       },
+      backgroundImage: {
+        'gradient-primary': 'var(--gradient-primary)',
+        'gradient-secondary': 'var(--gradient-secondary)',
+        'gradient-background': 'var(--gradient-background)',
+      },
+      boxShadow: {
+        'primary': 'var(--shadow-primary)',
+        'card': 'var(--shadow-card)',
+      },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "fade-in": "fade-in 0.3s ease-out",
+        "slide-in": "slide-in 0.3s ease-out",
       },
     },
   },
