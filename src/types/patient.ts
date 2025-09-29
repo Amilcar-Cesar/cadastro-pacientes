@@ -1,5 +1,5 @@
 export interface Patient {
-  id: string;
+  id: number;
   nome_completo: string;
   data_nascimento: string;
   cpf: string;
@@ -17,5 +17,5 @@ export interface CreatePatientData {
 }
 
 export interface UpdatePatientData extends CreatePatientData {
-  id: string;
+  id: number;
 }

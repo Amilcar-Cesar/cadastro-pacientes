@@ -1,155 +1,76 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Search, Users, LogOut } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/hooks/useAuth';
-import { useToast } from '@/hooks/use-toast';
+import { Plus, Search, Users } from 'lucide-react';
 import { Patient, CreatePatientData, UpdatePatientData } from '@/types/patient';
 import { PatientForm } from './PatientForm';
 import { PatientTable } from './PatientTable';
 import { DeleteConfirmModal } from './DeleteConfirmModal';
 
-// Mock data removed - now using Supabase database
+// Mock data for development - in production this would come from your database
+const mockPatients: Patient[] = [
+  {
+    id: 1,
+    nome_completo: 'Maria Silva Santos',
+    data_nascimento: '1985-03-15',
+    cpf: '123.456.789-01',
+    telefone: '(11) 99999-8888',
+    endereco_completo: 'Rua das Flores, 123 - Centro - São Paulo/SP',
+    data_cadastro: '2024-01-15T10:30:00Z'
+  },
+  {
+    id: 2,
+    nome_completo: 'João Carlos Oliveira',
+    data_nascimento: '1978-07-22',
+    cpf: '987.654.321-02',
+    telefone: '(11) 88888-7777',
+    endereco_completo: 'Avenida Paulista, 456 - Bela Vista - São Paulo/SP',
+    data_cadastro: '2024-01-16T14:20:00Z'
+  },
+  {
+    id: 3,
+    nome_completo: 'Ana Paula Costa',
+    data_nascimento: '1992-11-08',
+    cpf: '456.789.123-03',
+    telefone: '(11) 77777-6666',
+    endereco_completo: 'Rua Augusta, 789 - Consolação - São Paulo/SP',
+    data_cadastro: '2024-01-17T09:15:00Z'
+  }
+];
 
 export const PatientManagement: React.FC = () => {
-  const [patients, setPatients] = useState<Patient[]>([]);
+  const [patients, setPatients] = useState<Patient[]>(mockPatients);
   const [searchTerm, setSearchTerm] = useState('');
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingPatient, setEditingPatient] = useState<Patient | null>(null);
   const [deletingPatient, setDeletingPatient] = useState<Patient | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const { user, signOut } = useAuth();
-  const { toast } = useToast();
-
-  // Load patients from Supabase
-  useEffect(() => {
-    loadPatients();
-  }, []);
-
-  const loadPatients = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('pacientes')
-        .select('*')
-        .order('data_cadastro', { ascending: false });
-
-      if (error) throw error;
-      
-      // Convert database format to frontend format
-      const formattedPatients = data.map(patient => ({
-        id: patient.id,
-        nome_completo: patient.nome_completo,
-        data_nascimento: patient.data_nascimento,
-        cpf: patient.cpf,
-        telefone: patient.telefone || '',
-        endereco_completo: patient.endereco_completo || '',
-        data_cadastro: patient.data_cadastro
-      }));
-      
-      setPatients(formattedPatients);
-    } catch (error) {
-      console.error('Error loading patients:', error);
-      toast({
-        title: "Erro",
-        description: "Não foi possível carregar os pacientes.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const filteredPatients = patients.filter(patient =>
     patient.nome_completo.toLowerCase().includes(searchTerm.toLowerCase()) ||
     patient.cpf.includes(searchTerm)
   );
 
-  const handleCreatePatient = async (data: CreatePatientData) => {
-    try {
-      const { error } = await supabase
-        .from('pacientes')
-        .insert([{
-          ...data,
-          user_id: user?.id
-        }]);
-
-      if (error) throw error;
-
-      toast({
-        title: "Sucesso",
-        description: "Paciente cadastrado com sucesso!",
-      });
-      
-      setIsFormOpen(false);
-      loadPatients(); // Reload the list
-    } catch (error) {
-      console.error('Error creating patient:', error);
-      toast({
-        title: "Erro",
-        description: "Não foi possível cadastrar o paciente.",
-        variant: "destructive",
-      });
-    }
+  const handleCreatePatient = (data: CreatePatientData) => {
+    const newPatient: Patient = {
+      id: Math.max(...patients.map(p => p.id), 0) + 1,
+      ...data,
+      data_cadastro: new Date().toISOString()
+    };
+    setPatients([newPatient, ...patients]);
+    setIsFormOpen(false);
   };
 
-  const handleUpdatePatient = async (data: UpdatePatientData) => {
-    try {
-      const { error } = await supabase
-        .from('pacientes')
-        .update({
-          nome_completo: data.nome_completo,
-          data_nascimento: data.data_nascimento,
-          cpf: data.cpf,
-          telefone: data.telefone,
-          endereco_completo: data.endereco_completo
-        })
-        .eq('id', data.id);
-
-      if (error) throw error;
-
-      toast({
-        title: "Sucesso",
-        description: "Paciente atualizado com sucesso!",
-      });
-      
-      setEditingPatient(null);
-      loadPatients(); // Reload the list
-    } catch (error) {
-      console.error('Error updating patient:', error);
-      toast({
-        title: "Erro",
-        description: "Não foi possível atualizar o paciente.",
-        variant: "destructive",
-      });
-    }
+  const handleUpdatePatient = (data: UpdatePatientData) => {
+    setPatients(patients.map(patient =>
+      patient.id === data.id ? { ...patient, ...data } : patient
+    ));
+    setEditingPatient(null);
   };
 
-  const handleDeletePatient = async (id: string) => {
-    try {
-      const { error } = await supabase
-        .from('pacientes')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
-
-      toast({
-        title: "Sucesso",
-        description: "Paciente excluído com sucesso!",
-      });
-      
-      setDeletingPatient(null);
-      loadPatients(); // Reload the list
-    } catch (error) {
-      console.error('Error deleting patient:', error);
-      toast({
-        title: "Erro",
-        description: "Não foi possível excluir o paciente.",
-        variant: "destructive",
-      });
-    }
+  const handleDeletePatient = (id: number) => {
+    setPatients(patients.filter(patient => patient.id !== id));
+    setDeletingPatient(null);
   };
 
   const handleEditClick = (patient: Patient) => {
@@ -166,20 +87,9 @@ export const PatientManagement: React.FC = () => {
         {/* Header */}
         <Card className="shadow-card border-0">
           <CardHeader className="bg-gradient-primary text-white rounded-t-lg">
-            <CardTitle className="flex items-center justify-between">
-              <div className="flex items-center gap-3 text-2xl">
-                <Users className="h-8 w-8" />
-                Sistema de Cadastro de Pacientes
-              </div>
-              <Button
-                onClick={signOut}
-                variant="outline"
-                size="sm"
-                className="bg-white/10 text-white border-white/20 hover:bg-white/20"
-              >
-                <LogOut className="h-4 w-4 mr-2" />
-                Sair
-              </Button>
+            <CardTitle className="flex items-center gap-3 text-2xl">
+              <Users className="h-8 w-8" />
+              Sistema de Cadastro de Pacientes
             </CardTitle>
           </CardHeader>
         </Card>
