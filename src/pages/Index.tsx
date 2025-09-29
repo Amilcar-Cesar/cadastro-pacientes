@@ -1,3 +1,4 @@
+import React from "react";
 import { PatientManagement } from '@/components/PatientManagement';
 
 const Index = () => {
